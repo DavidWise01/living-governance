@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Living-Governance Ecosystem — a society that runs</title>
+<meta name="description" content="ROOT0's living-governance ecosystem (v5.4, Resource Economy): a runnable multi-agent society where agents hold energy and reputation, make claims that cost to file and must be settled, compete under scarcity, and leave a ledger — built across v5.0→v5.4 (faction memory, trust-lineage replay, a world model, a resource economy). The live runtime is embedded below. Honest: a prototype / toy model of ROOT0's governance framework, not a validated economic or political simulation. David Lee Wise, two-layer honest.">
+<style>
+  :root{--bg:#0a0c14;--panel:#11141f;--panel2:#171b29;--edge:#26304a;--ink:#e9ecf4;--dim:#a9b2cc;--faint:#6d77a0;
+    --cyan:#2fd4e6;--cyan2:#8ef0fb;--violet:#a78bfa;--violet2:#c9b8ff;--one:#7fe0a0;--zero:#fb7185;--amber:#fbbf24;--ember:#fb923c;
+    --mono:'SFMono-Regular',ui-monospace,'Cascadia Code',Menlo,Consolas,monospace;--serif:'Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif;}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--serif);line-height:1.58;background-image:radial-gradient(1200px 620px at 70% -12%,#16203a 0%,transparent 55%),radial-gradient(900px 520px at 5% 110%,#1a132e 0%,transparent 55%);}
+  .wrap{max-width:1060px;margin:0 auto;padding:42px 24px 90px}
+  header{border-bottom:1px solid var(--edge);padding-bottom:22px;margin-bottom:22px}
+  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--violet);opacity:.95}
+  h1{font-family:Georgia,serif;font-size:36px;line-height:1.08;margin:.3em 0 .14em;font-weight:600}h1 em{color:var(--violet2);font-style:italic}
+  .who{font-family:var(--mono);font-size:12px;color:var(--faint);letter-spacing:.04em}
+  .sub{color:var(--dim);font-size:16px;max-width:76ch;margin-top:14px}.sub b{color:var(--ink)}
+  .verdicts{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:22px 0}@media(max-width:720px){.verdicts{grid-template-columns:1fr}}
+  .vc{border:1px solid var(--edge);border-radius:11px;padding:13px 15px;border-top-width:3px;background:rgba(20,24,38,.6)}
+  .vc .badge{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em}
+  .vc.s{border-top-color:var(--one)}.vc.s .badge{color:var(--one)} .vc.m{border-top-color:var(--amber)}.vc.m .badge{color:var(--amber)} .vc.f{border-top-color:var(--ember)}.vc.f .badge{color:var(--ember)}
+  .vc p{font-size:12px;color:var(--dim);margin:6px 0 0;line-height:1.45}.vc p b{color:var(--ink)}
+  section{margin:34px 0}
+  h2{font-size:13px;font-family:var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--violet2);border-left:2px solid var(--violet);padding-left:11px;margin:0 0 8px}
+  .lede{color:var(--dim);font-size:15px;margin:0 0 16px;max-width:82ch}
+  .frame{border:1px solid var(--edge);border-radius:14px;overflow:hidden;background:#0c0f18;box-shadow:0 30px 70px -45px #000}
+  .frame .bar{display:flex;align-items:center;gap:8px;padding:9px 13px;border-bottom:1px solid var(--edge);background:linear-gradient(180deg,#141826,#0c0f18);font-family:var(--mono);font-size:11px;color:var(--faint)}
+  .dot{width:9px;height:9px;border-radius:50%}.dot.r{background:#fb7185}.dot.y{background:#fbbf24}.dot.g{background:#7fe0a0}
+  .frame .bar .lbl{margin-left:6px;color:var(--violet2)}
+  .frame .bar a{margin-left:auto;color:var(--violet);text-decoration:none;border-bottom:1px dotted #4a4a7a}
+  iframe{width:100%;height:760px;border:0;display:block;background:#0a0c12}
+  @media(max-width:680px){iframe{height:600px}}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}@media(max-width:640px){.grid{grid-template-columns:1fr}}
+  .mc{border:1px solid var(--edge);border-radius:10px;padding:13px 15px;background:rgba(0,0,0,.16)}.mc b{color:var(--violet2);font-family:var(--mono);font-size:11px;letter-spacing:.06em}.mc p{font-size:13px;color:var(--dim);margin:6px 0 0}
+  .note{color:var(--dim);font-size:13.5px;border-left:2px solid var(--edge);padding-left:13px;margin:16px 0 0}.note b{color:var(--ink)}
+  code{font-family:var(--mono);color:var(--violet2);background:#130d20;padding:1px 5px;border-radius:5px}
+  footer{margin-top:42px;border-top:1px solid var(--edge);padding-top:18px;color:var(--faint);font-family:var(--mono);font-size:11px;line-height:1.7}
+  footer a,.bar2 a{color:var(--violet)}.bar2{font-family:var(--mono);font-size:11.5px;margin-bottom:16px}.bar2 a{text-decoration:none;border-bottom:1px dotted #4a4a7a}
+  blockquote{margin:14px 0;padding:10px 16px;border-left:3px solid var(--violet);color:var(--ink);font-style:italic;font-size:15px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="bar2"><a href="https://davidwise01.github.io/ud0/">◄ UD0</a> &nbsp; ARTIFICIAL INTELLIGENCE · a society that runs</div>
+<header>
+  <div class="kicker">ROOT0 · the governance ecosystem, made to run</div>
+  <h1>The Living-Governance <em>Ecosystem</em></h1>
+  <div class="who">v5.4 · Resource Economy · built v5.0 → v5.4 (faction memory · trust-lineage replay · world model · resource economy) · David Lee Wise / ROOT0</div>
+  <div class="sub">Where the <a href="https://davidwise01.github.io/game-theory-engine/">game-theory engine</a> watches a single decision, this watches a whole <b>society over time</b>. Agents hold <b>energy</b> and <b>reputation</b>; they file <b>claims</b> that <em>cost</em> to make and must be <b>settled</b>; they remember each other across <b>factions</b> and replay a <b>trust lineage</b>; and they do all of it under <b>scarcity</b> — a finite resource economy where not every claim can be paid. Step the clock and watch the numbers that matter drift: average energy, average reputation, how long a claim survives before it's settled or starved. It is governance treated as a <b>living system you can run</b>, not a static org chart. The live runtime is below.</div>
+</header>
+<div class="verdicts">
+  <div class="vc s"><span class="badge">✓ WHAT'S REAL</span><p><b>A running micro-society.</b> Energy, reputation, costed claims, settlement, scarcity, and a ledger all update live, tick by tick — a legible model of how reputation and resources co-evolve when actions aren't free.</p></div>
+  <div class="vc m"><span class="badge">◐ A PROTOTYPE, NOT A POLITY</span><p><b>A toy model.</b> The economy is illustrative — simple costs and payouts, not a calibrated economic or political simulation. It demonstrates ROOT0's governance <em>architecture</em>; it makes no empirical claim about real institutions.</p></div>
+  <div class="vc f"><span class="badge">◔ ROOT0's FRAMEWORK</span><p><b>His own design vocabulary.</b> "Faction memory," "trust-lineage replay," "claim survival," the resource-economy framing — David Lee Wise's system, rendered as a runnable sim. Read them as designed terms, not standard governance theory.</p></div>
+</div>
+
+<section>
+  <h2>The live runtime — v5.4</h2>
+  <p class="lede">The actual ecosystem, embedded and running. Press <b>Step Economy</b> to advance the clock; <b>Settle Claims</b> to resolve outstanding ones; select an agent to inspect it. Watch <em>scarcity active</em> flip on when the resource pool tightens, and the averages — energy, reputation, claim survival — move in response. Everything is computed locally.</p>
+  <div class="frame">
+    <div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="lbl">living_governance_ecosystem · v5.4 · resource economy</span><a href="runtime.html" target="_blank" rel="noopener">open full ↗</a></div>
+    <iframe src="runtime.html" title="Living-Governance Ecosystem v5.4 — Resource Economy" loading="lazy"></iframe>
+  </div>
+  <div class="note">Tight on a phone? Use <b>open full ↗</b> for its own tab. The runtime is a single self-contained browser page — no server, nothing sent anywhere.</div>
+</section>
+
+<section>
+  <h2>What the society tracks</h2>
+  <div class="grid">
+    <div class="mc"><b>ENERGY &amp; REPUTATION</b><p>Each agent carries two stocks: <em>energy</em> (the resource it spends to act) and <em>reputation</em> (what others extend it on trust). Both rise and fall with how it behaves — the twin currencies of any governance.</p></div>
+    <div class="mc"><b>CLAIMS &amp; COSTS</b><p>Acting isn't free: filing a <em>claim</em> costs, and a claim must be <em>settled</em> or it starves. "Average claim survival" is the heartbeat — how long the system lets a demand stand before resolving it.</p></div>
+    <div class="mc"><b>SCARCITY</b><p>The resource pool is finite. When it tightens, <em>scarcity active</em> turns on and the society must choose what to pay — the moment governance stops being bookkeeping and starts being politics.</p></div>
+    <div class="mc"><b>FACTION MEMORY</b><p>Agents remember who did what, grouped into <em>factions</em> — so today's settlement is shaped by yesterday's. Memory is what turns a crowd into a polity.</p></div>
+    <div class="mc"><b>TRUST-LINEAGE REPLAY</b><p>Trust isn't a snapshot; it has a <em>history</em> that can be replayed — how a reputation was earned or lost, step by step. The lineage, not just the score.</p></div>
+    <div class="mc"><b>WORLD MODEL &amp; LEDGER</b><p>A shared <em>world model</em> the agents act on, and a <em>ledger</em> recording the run. The society is replayable: you can see how it got to its current state, not just what that state is.</p></div>
+  </div>
+  <p class="note"><b>The thesis.</b> Governance is an <em>economy of trust under scarcity</em> — reputations and resources co-evolving as costed claims compete for a finite pool, with memory carrying the past into every settlement. Most governance models freeze that into a diagram; this one lets it <em>run</em>, so you can watch trust accrue, factions form, and scarcity force the hard choices. ⚑ It's the time-extended companion to ROOT0's single-decision <a href="https://davidwise01.github.io/game-theory-engine/">game-theory engine</a> — one watches a verdict, the other watches a society.</p>
+</section>
+
+<section>
+  <h2>Gate kept on</h2>
+  <p class="note" style="border-color:var(--amber)"><b style="color:var(--amber)">Two layers, held apart.</b> What this <b>is</b>: a genuine, runnable, self-contained multi-agent model in which energy, reputation, costed claims, settlement, scarcity, faction memory, and a replayable trust-lineage all interact live — built deliberately across five versions and a faithful render of ROOT0's governance framework. What it is <b>not</b>: a validated economic or political simulation. The costs and payouts are illustrative, the agents are simple, and terms like "faction memory," "trust-lineage replay," and "claim survival" are David Lee Wise's <em>designed vocabulary</em>, not standard political-economy constructs. It makes <em>no</em> empirical claim about real institutions or markets — it is an <b>architecture demo</b> that argues, by running, that governance is best understood as a living economy of trust under scarcity. Read it for the legibility, not for predictions. ⚑ Render-not-invent: this page describes the ecosystem David built and flags exactly where the model is a toy.</p>
+</section>
+
+<footer>
+  THE LIVING-GOVERNANCE ECOSYSTEM · v5.4 Resource Economy · ARTIFICIAL INTELLIGENCE · two-layer honest<br>
+  live in-browser runtime (energy · reputation · costed claims · settlement · scarcity · faction memory · trust-lineage replay · world model · ledger) · v5.0 → v5.4<br>
+  a prototype of ROOT0's governance framework — an architecture demo, not a validated economic or political simulation<br>
+  ◄ <a href="https://davidwise01.github.io/ud0/">UD0</a> · sibling: <a href="https://davidwise01.github.io/game-theory-engine/">the Game-Theory Engine</a> (the agentic court)<br>
+  governor David Lee Wise (ROOT0) · CC-BY-ND-4.0
+</footer>
+</div>
+</body>
+</html>
